@@ -15,6 +15,9 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <DefineConstants>$(DefineConstants);ASPNETODATA;ASPNETWEBAPI;NETFX;NETFX45</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Extensions.DependencyInjection, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
@@ -38,8 +41,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\sln\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\..\..\..\Sandbox\odata\DynamicOData\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -90,6 +92,7 @@
     <Compile Include="Formatter\Serialization\ODataSerializerContext.cs" />
     <Compile Include="Formatter\Serialization\ODataSerializerProvider.cs" />
     <Compile Include="HttpRequestScope.cs" />
+    <Compile Include="DynamicODataQueryParameterBindingAttribute.cs" />
     <Compile Include="PerRouteContainer.cs" />
     <Compile Include="GetNextPageHelper.cs" />
     <Compile Include="Batch\UnbufferedODataBatchHandler.cs" />
@@ -109,6 +112,7 @@
     <Compile Include="ODataRoutingAttribute.cs" />
     <Compile Include="Builder\ODataConventionModelBuilder.cs" />
     <Compile Include="Formatter\Serialization\ODataErrorSerializer.cs" />
+    <Compile Include="Query\DynamicODataQueryOptions.cs" />
     <Compile Include="Query\ODataQueryOptions.cs" />
     <Compile Include="PerRequestContentNegotiator.cs" />
     <Compile Include="Query\ODataQueryOptionsOfTEntity.cs" />
