@@ -49,7 +49,7 @@ namespace Microsoft.AspNet.OData.Query
         /// the <see cref="ODataQueryContext"/>.
         /// </summary>
         /// <param name="context">The <see cref="ODataQueryContext"/> of the request.</param>
-        private void Initialize(ODataQueryContext context)
+        private void Initialize(UntypedODataQueryContext context)
         {
             Contract.Assert(context != null);
 
@@ -66,9 +66,9 @@ namespace Microsoft.AspNet.OData.Query
             IDictionary<string, string> normalizedQueryParameters = GetODataQueryParameters();
 
             _queryOptionParser = new ODataQueryOptionParser(
-                context.Model,
-                context.ElementType,
-                context.NavigationSource,
+                null,
+                null,
+                null,
                 normalizedQueryParameters);
 
             // Note: the context.RequestContainer must be set by the ODataQueryOptions constructor.
@@ -86,7 +86,7 @@ namespace Microsoft.AspNet.OData.Query
         /// <summary>
         ///  Gets the given <see cref="ODataQueryContext"/>
         /// </summary>
-        public ODataQueryContext Context { get; private set; }
+        public UntypedODataQueryContext Context { get; private set; }
 
         /// <summary>
         /// Gets the raw string of all the OData query options
@@ -318,7 +318,6 @@ namespace Microsoft.AspNet.OData.Query
             {
                 result = Apply.ApplyTo(result, querySettings);
                 InternalRequest.Context.ApplyClause = Apply.ApplyClause;
-                this.Context.ElementClrType = Apply.ResultClrType;
                 apply = Apply.ApplyClause;
             }
 
@@ -346,27 +345,6 @@ namespace Microsoft.AspNet.OData.Query
             }
 
             OrderByQueryOption orderBy = OrderBy;
-
-            // $skip or $top require a stable sort for predictable results.
-            // Result limits require a stable sort to be able to generate a next page link.
-            // If either is present in the query and we have permission,
-            // generate an $orderby that will produce a stable sort.
-            if (querySettings.EnsureStableOrdering &&
-                (IsAvailableODataQueryOption(Skip, AllowedQueryOptions.Skip) ||
-                 IsAvailableODataQueryOption(Top, AllowedQueryOptions.Top) ||
-                 querySettings.PageSize.HasValue))
-            {
-                // If there is no OrderBy present, we manufacture a default.
-                // If an OrderBy is already present, we add any missing
-                // properties necessary to make a stable sort.
-                // Instead of failing early here if we cannot generate the OrderBy,
-                // let the IQueryable backend fail (if it has to).
-                List<string> applySortOptions = GetApplySortOptions(apply);
-
-                orderBy = orderBy == null
-                            ? GenerateDefaultOrderBy(Context, applySortOptions)
-                            : EnsureStableSortOrderBy(orderBy, Context, applySortOptions);
-            }
 
             if (IsAvailableODataQueryOption(orderBy, AllowedQueryOptions.OrderBy))
             {

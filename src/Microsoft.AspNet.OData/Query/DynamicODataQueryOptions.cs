@@ -23,7 +23,7 @@ namespace Microsoft.AspNet.OData.Query
         /// <param name="context">The <see cref="ODataQueryContext"/> which contains the <see cref="IEdmModel"/> and some type information.</param>
         /// <param name="request">The incoming request message.</param>
         /// <remarks>This signature uses types that are AspNet-specific.</remarks>
-        public DynamicODataQueryOptions(ODataQueryContext context, HttpRequestMessage request)
+        public DynamicODataQueryOptions(UntypedODataQueryContext context, HttpRequestMessage request)
         {
             if (context == null)
             {

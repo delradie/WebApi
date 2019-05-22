@@ -68,6 +68,14 @@ namespace Microsoft.AspNet.OData
                     throw Error.Argument("actionContext", SRResources.RequestMustContainConfiguration);
                 }
 
+                UntypedODataQueryContext queryContext = new UntypedODataQueryContext(request.ODataProperties().Path);
+
+                Func<UntypedODataQueryContext, HttpRequestMessage, DynamicODataQueryOptions> createODataQueryOptions =
+                    (Func<UntypedODataQueryContext, HttpRequestMessage, DynamicODataQueryOptions>)Descriptor.Properties.GetOrAdd(CreateODataQueryOptionsCtorKey, _ =>
+                    {
+                        return Delegate.CreateDelegate(typeof(Func<UntypedODataQueryContext, HttpRequestMessage, DynamicODataQueryOptions>), _createODataQueryOptions.MakeGenericMethod());
+                    });
+
                 Func<HttpRequestMessage, DynamicODataQueryOptions> createODataQueryOptions =
                     (Func<HttpRequestMessage, DynamicODataQueryOptions>)Descriptor.Properties.GetOrAdd(CreateODataQueryOptionsCtorKey, _ =>
                     {
@@ -80,7 +88,7 @@ namespace Microsoft.AspNet.OData
                 return TaskHelpers.Completed();
             }
 
-            public static DynamicODataQueryOptions CreateDynamicODataQueryOptions(ODataQueryContext context, HttpRequestMessage request)
+            public static DynamicODataQueryOptions CreateDynamicODataQueryOptions(UntypedODataQueryContext context, HttpRequestMessage request)
             {
                 return new DynamicODataQueryOptions(context, request);
             }
